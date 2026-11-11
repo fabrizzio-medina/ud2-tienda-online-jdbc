@@ -1,0 +1,10 @@
+# Copia este fichero en src/main/resources/application.properties y pon tus datos
+jdbc.datasource.url=jdbc:mysql://localhost:3306/unidad2
+jdbc.datasource.user=TU_USUARIO
+jdbc.datasource.password=TU_CONTRASEÑA
+jdbc.datasource.driver=com.mysql.cj.jdbc.Driver
+
+h2.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+h2.datasource.user=sa
+h2.datasource.password=
+h2.datasource.driver=org.h2.Driver
