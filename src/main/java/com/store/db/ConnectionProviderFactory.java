@@ -1,6 +1,6 @@
 package com.store.db;
 
-import com.store.config.DatabaseEngine;
+import com.store.config.ConnectionMode;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -11,6 +11,7 @@ public final class ConnectionProviderFactory {
 
     private ConnectionProviderFactory() {
     }
+
 
     static {
         try (InputStream input = ConnectionProviderFactory.class.getClassLoader().getResourceAsStream("application.properties")) {
@@ -24,20 +25,29 @@ public final class ConnectionProviderFactory {
     }
 
 
-    // Método principal del Factory: Retorna la fábrica según el tipo que le pidas por parámetro
-    public static ConnectionProvider getProvider(DatabaseEngine engine) {
-        if (engine == null) {
-            throw new IllegalArgumentException("El tipo de base de datos no puede ser nulo.");
+    public static ConnectionProvider getProvider() {
+        String connectionName = props.getProperty("connection.mode");
+        if (connectionName == null) {
+            throw new IllegalArgumentException("El modo de conexion no puede ser nulo.");
         }
 
-        switch (engine) {
-            case MY_SQL:
-                return new MySQLConnection(props);
-            case H2:
-                return new H2Connection(props);
+        ConnectionMode connectionMode;
+        try {
+            connectionMode = ConnectionMode.valueOf(connectionName.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Motor de base de datos no reconocido en la configuración: " + connectionName);
+        }
+
+
+        switch (connectionMode) {
+            case DRIVER_MANAGER:
+                return new DriverManagerConnectionProvider(props);
+            case POOL:
+                return new HikariConnectionProvider(props);
             default:
-                throw new IllegalArgumentException("Tipo de base de datos no soportado: " + engine);
+                throw new IllegalArgumentException("Tipo de base de datos no soportado: " + connectionMode);
         }
     }
+
 
 }
