@@ -1,32 +1,32 @@
 package com.store.db;
 
+import com.store.config.AppConfig;
 import com.store.config.ConnectionMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.InputStream;
+
 import java.util.Properties;
 
 public final class ConnectionProviderFactory {
+    private static final Logger LOG = LogManager.getLogger(ConnectionProviderFactory.class);
 
-    private static final Properties props = new Properties();
+    private final static Properties PROPS;
 
     private ConnectionProviderFactory() {
     }
 
 
     static {
-        try (InputStream input = ConnectionProviderFactory.class.getClassLoader().getResourceAsStream("application.properties")) {
-            if (input == null) {
-                throw new IllegalStateException("No se encontró el archivo application.properties en el classpath.");
-            }
-            props.load(input);
-        } catch (Exception e) {
-            throw new RuntimeException("Error crítico al cargar las propiedades de configuración", e);
-        }
+        PROPS = AppConfig.getProps();
+        String connectionName = PROPS.getProperty("connection.mode");
+        String engineName = PROPS.getProperty("database.engine");
+        LOG.info("Configuración - Gestor={}, conexiones={}", engineName, connectionName);
     }
 
 
     public static ConnectionProvider getProvider() {
-        String connectionName = props.getProperty("connection.mode");
+        String connectionName = PROPS.getProperty("connection.mode");
         if (connectionName == null) {
             throw new IllegalArgumentException("El modo de conexion no puede ser nulo.");
         }
@@ -41,13 +41,12 @@ public final class ConnectionProviderFactory {
 
         switch (connectionMode) {
             case DRIVER_MANAGER:
-                return new DriverManagerConnectionProvider(props);
+                return new DriverManagerConnectionProvider(PROPS);
             case POOL:
-                return new HikariConnectionProvider(props);
+                return new HikariConnectionProvider(PROPS);
             default:
                 throw new IllegalArgumentException("Tipo de base de datos no soportado: " + connectionMode);
         }
     }
-
 
 }

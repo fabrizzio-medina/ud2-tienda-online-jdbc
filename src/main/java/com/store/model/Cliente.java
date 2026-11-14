@@ -1,22 +1,29 @@
 package com.store.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cliente {
 
     private Long id;
     private String dni;
     private String nombres;
     private String apellidos;
-    private String direccion;
     private String telefono;
+    private List<Direccion> direcciones = new ArrayList<>();
 
     public Cliente(){}
-    public Cliente(Long id, String dni, String nombres, String apellidos, String direccion, String telefono) {
+
+    public Cliente(Long id, String dni, String nombres, String apellidos, String telefono) {
         this.id = id;
         this.dni = dni;
         this.nombres = nombres;
         this.apellidos = apellidos;
-        this.direccion = direccion;
         this.telefono = telefono;
+    }
+
+    public void agregarDireccion(Direccion direccion){
+        this.direcciones.add(direccion);
     }
 
     public Long getId() {
@@ -51,13 +58,6 @@ public class Cliente {
         this.apellidos = apellidos;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
 
     public String getTelefono() {
         return telefono;
@@ -65,5 +65,13 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public List<Direccion> getDirecciones() {
+        return direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
     }
 }

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class DetallePedido {
 
     private long id;
+
     private int linea;
     private long pedidoId;
     private long productoId;
