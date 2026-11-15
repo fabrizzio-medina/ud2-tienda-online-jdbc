@@ -7,9 +7,9 @@ import java.util.Properties;
 
 public class AppConfig {
 
-    private static final Properties props = new Properties();
+    private static final Properties PROPS = new Properties();
 
-    private AppConfig(){
+    private AppConfig() {
     }
 
     static {
@@ -17,13 +17,39 @@ public class AppConfig {
             if (input == null) {
                 throw new IllegalStateException("No se encontró el archivo application.properties en el classpath.");
             }
-            props.load(input);
+            PROPS.load(input);
         } catch (Exception e) {
             throw new RuntimeException("Error crítico al cargar las propiedades de configuración", e);
         }
     }
 
-    public static Properties getProps(){
-        return props;
+    public static DatabaseEngine getDatabaseEngine() {
+        return leerEnum(DatabaseEngine.class, "database.engine");
+    }
+
+
+    public static ConnectionMode getConnectionMode() {
+        return leerEnum(ConnectionMode.class, "connection.mode");
+    }
+
+    public static SimulationMode getSimulationMode() {
+        return leerEnum(SimulationMode.class, "simulation.mode");
+    }
+
+    public static String getProperty(String clave) {
+        String valor = PROPS.getProperty(clave);
+        if (valor == null) {
+            throw new IllegalStateException("Falta la propiedad '" + clave + "' en application.properties");
+        }
+        return valor.trim();
+    }
+
+    private static <E extends Enum<E>> E leerEnum(Class<E> tipo, String clave) {
+        String valor = getProperty(clave);
+        try {
+            return Enum.valueOf(tipo, valor.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Valor no válido para '" + clave + "': " + valor);
+        }
     }
 }

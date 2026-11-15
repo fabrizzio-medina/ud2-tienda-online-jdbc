@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="patron">%d{dd/MM/yyyy HH:mm:ss.SSS} %-5level %c{1} - %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Consola">
+            <PatternLayout pattern="${patron}"/>
+        </Console>
+
+        <!-- Log activo con rotación por tamaño, comprimido en .gz -->
+        <RollingFile name="Runtime"
+                     fileName="logs/runtime/aplicacion.log"
+                     filePattern="logs/runtime/aplicacion-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${patron}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+
+        <!-- Un fichero de evidencia por ejecución, con fecha y hora en el nombre -->
+        <File name="Evidencia"
+              fileName="logs/evidencias/ejecucion_${date:dd-MM-yyyy_HH-mm-ss}.log">
+            <PatternLayout pattern="${patron}"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.store" level="DEBUG"/>
+        <Root level="INFO">
+            <AppenderRef ref="Consola"/>
+            <AppenderRef ref="Runtime"/>
+            <AppenderRef ref="Evidencia"/>
+        </Root>
+    </Loggers>
+</Configuration>

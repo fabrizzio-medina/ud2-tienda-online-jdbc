@@ -10,9 +10,17 @@ public class Cliente {
     private String nombres;
     private String apellidos;
     private String telefono;
-    private List<Direccion> direcciones = new ArrayList<>();
 
-    public Cliente(){}
+    private List<Direccion> direcciones = new ArrayList<>();
+    public Cliente() {
+    }
+
+    public Cliente(String dni, String nombres, String apellidos, String telefono) {
+        this.dni = dni;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.telefono = telefono;
+    }
 
     public Cliente(Long id, String dni, String nombres, String apellidos, String telefono) {
         this.id = id;
@@ -66,6 +74,7 @@ public class Cliente {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
 
     public List<Direccion> getDirecciones() {
         return direcciones;

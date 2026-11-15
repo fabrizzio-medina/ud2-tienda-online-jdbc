@@ -3,6 +3,8 @@ package com.store.dao.impl;
 import com.store.dao.DireccionDAO;
 import com.store.db.ConnectionProvider;
 import com.store.model.Direccion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DireccionDAOImpl implements DireccionDAO {
+
+    private static final Logger LOG = LogManager.getLogger(DireccionDAOImpl.class);
 
     private final ConnectionProvider connectionProvider;
 
@@ -67,7 +71,7 @@ public class DireccionDAOImpl implements DireccionDAO {
             }
 
         } catch (SQLException e) {
-            //LOG.error("Error al buscar direcciones para el cliente ID {}: {}", clienteId, e.getMessage(), e);
+            LOG.error("Error al buscar direcciones para el cliente ID {}: {}", clienteId, e.getMessage(), e);
             throw new RuntimeException("Error al buscar direcciones por cliente ID", e);
         }
 

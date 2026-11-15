@@ -1,7 +1,6 @@
 package com.store.model;
 
 public class Direccion {
-
     private Long id;
     private String descripcion;
     private Long clienteId;
@@ -9,7 +8,9 @@ public class Direccion {
 
     public Direccion() {
     }
-
+    public Direccion(String descripcion){
+        this(null, descripcion, null);
+    }
     public Direccion(String descripcion, Long clienteId) {
         this(null, descripcion, clienteId);
     }
@@ -19,6 +20,7 @@ public class Direccion {
         this.descripcion = descripcion;
         this.clienteId = clienteId;
     }
+
 
     public Long getId() {
         return id;
