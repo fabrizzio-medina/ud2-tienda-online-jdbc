@@ -1,4 +1,4 @@
 package com.store.dao;
 
-public class ConsultaDAO {
+public interface ConsultaDAO {
 }

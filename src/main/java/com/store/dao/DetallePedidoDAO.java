@@ -1,4 +1,4 @@
 package com.store.dao;
 
-public class DetallePedidoDAO {
+public interface DetallePedidoDAO {
 }

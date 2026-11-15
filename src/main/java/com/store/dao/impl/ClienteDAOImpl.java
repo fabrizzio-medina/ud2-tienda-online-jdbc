@@ -15,7 +15,6 @@ import java.util.Optional;
 
 public class ClienteDAOImpl implements ClienteDAO {
 
-
     private static final Logger LOG = LogManager.getLogger(ClienteDAOImpl.class);
 
     private final ConnectionProvider connectionProvider;
@@ -29,15 +28,15 @@ public class ClienteDAOImpl implements ClienteDAO {
         String SQL_GUARDAR = "INSERT INTO cliente(dni, nombres, apellidos, telefono) VALUES (?,?,?,?);";
 
         Cliente clienteGuardado = null;
-        try (Connection conn = connectionProvider.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(SQL_GUARDAR, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+        try(Connection conn = connectionProvider.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(SQL_GUARDAR, java.sql.Statement.RETURN_GENERATED_KEYS)){
             pstmt.setString(1, cliente.getDni());
             pstmt.setString(2, cliente.getNombres());
             pstmt.setString(3, cliente.getApellidos());
             pstmt.setString(4, cliente.getTelefono());
 
             int filasAfectadas = pstmt.executeUpdate();
-            if (filasAfectadas > 0) {
+            if(filasAfectadas > 0){
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
                         Long id = rs.getLong(1);

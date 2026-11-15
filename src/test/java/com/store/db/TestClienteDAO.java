@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestClienteDAO {
 
-
     @Test
     public void testCreateCliente(){
         ClienteDAO clienteDAO = new ClienteDAOImpl(ConnectionProviderFactory.getProvider());

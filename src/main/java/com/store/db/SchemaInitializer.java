@@ -18,27 +18,27 @@ public class SchemaInitializer {
     }
 
     public void initializeDatabase(){
-
-
         try(Connection conn = connectionProvider.getConnection();
             Statement stmt = conn.createStatement()){
 
-
             stmt.execute(String.format(DROP_TABLE_SQL, "direccion"));
+            stmt.execute(String.format(DROP_TABLE_SQL, "categoria"));
             stmt.execute(String.format(DROP_TABLE_SQL, "producto"));
+            stmt.execute(String.format(DROP_TABLE_SQL, "pedido"));
             stmt.execute(String.format(DROP_TABLE_SQL, "cliente"));
+
 
             createClienteTable(stmt);
             createCategoriaTable(stmt);
             createProductoTable(stmt);
             createDireccion(stmt);
+            createPedidoTable(stmt);
             LOG.info("Esquema unidad2 recreado (8 tablas)");
         } catch (SQLException e) {
             LOG.error("Error crítico al inicializar la base de datos: {}", e.getMessage(), e);
             throw new RuntimeException("Error al inicializar la base de datos", e);
         }
     }
-
 
 
     private void createClienteTable(Statement stmt) throws SQLException {
@@ -95,5 +95,20 @@ public class SchemaInitializer {
             """;
         stmt.execute(SQL_CATEGORIA);
         LOG.info("Tabla Categoria creada exitosamente.");
+    }
+
+    private void createPedidoTable(Statement stmt) throws SQLException {
+        String SQL_PEDIDO = """
+            CREATE TABLE IF NOT EXISTS pedido (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                cliente_id BIGINT NOT NULL,
+                estado VARCHAR(50) NOT NULL DEFAULT 'PENDIENTE',
+                fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                total DECIMAL(10, 2) NOT NULL,
+                CONSTRAINT fk_pedido_cliente FOREIGN KEY (cliente_id) REFERENCES cliente(id)
+            );
+            """;
+        stmt.execute(SQL_PEDIDO);
+        LOG.info("Tabla Pedido creada exitosamente.");
     }
 }
