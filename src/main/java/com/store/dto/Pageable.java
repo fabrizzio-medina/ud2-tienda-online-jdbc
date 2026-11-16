@@ -1,7 +1,6 @@
 package com.store.dto;
 
 public record Pageable(int pagina, int tamanio) {
-
     public Pageable {
         if (pagina < 0) {
             throw new IllegalArgumentException("La página no puede ser negativa");
@@ -19,3 +18,4 @@ public record Pageable(int pagina, int tamanio) {
         return tamanio;
     }
 }
+

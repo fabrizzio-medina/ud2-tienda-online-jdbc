@@ -1,5 +1,7 @@
 package com.store.dto;
 
+import com.store.model.TipoProducto;
+
 import java.math.BigDecimal;
 
 public record ProductoDTO(
@@ -7,11 +9,12 @@ public record ProductoDTO(
         String sku,
         String nombre,
         String descripcion,
-        int cantidad,
-        BigDecimal precioUnitario
+        TipoProducto tipo,
+        BigDecimal precioUnitario,
+        String socket
 ) {
-
-    public ProductoDTO(String sku, String nombre, String descripcion, int cantidad, BigDecimal precioUnitario) {
-        this(null, sku, nombre, descripcion, cantidad, precioUnitario);
+    public ProductoDTO(String sku, String nombre, String descripcion, TipoProducto tipo,
+                       BigDecimal precioUnitario, String socket) {
+        this(null, sku, nombre, descripcion, tipo, precioUnitario, socket);
     }
 }

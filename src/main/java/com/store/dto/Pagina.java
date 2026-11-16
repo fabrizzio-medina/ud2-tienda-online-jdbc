@@ -2,8 +2,7 @@ package com.store.dto;
 
 import java.util.List;
 
-public class Pagina <T>{
-
+public class Pagina<T> {
     private final List<T> contenido;
     private final int numeroPagina;
     private final int tamanioPagina;
@@ -44,5 +43,4 @@ public class Pagina <T>{
     public boolean tieneAnterior() {
         return numeroPagina > 0;
     }
-
 }

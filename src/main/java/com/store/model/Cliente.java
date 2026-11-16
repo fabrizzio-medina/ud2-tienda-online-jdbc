@@ -10,16 +10,13 @@ public class Cliente {
     private String nombres;
     private String apellidos;
     private String telefono;
-
     private List<Direccion> direcciones = new ArrayList<>();
+
     public Cliente() {
     }
 
     public Cliente(String dni, String nombres, String apellidos, String telefono) {
-        this.dni = dni;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
-        this.telefono = telefono;
+        this(null, dni, nombres, apellidos, telefono);
     }
 
     public Cliente(Long id, String dni, String nombres, String apellidos, String telefono) {
@@ -30,7 +27,7 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public void agregarDireccion(Direccion direccion){
+    public void agregarDireccion(Direccion direccion) {
         this.direcciones.add(direccion);
     }
 

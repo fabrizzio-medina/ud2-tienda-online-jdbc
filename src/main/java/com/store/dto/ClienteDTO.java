@@ -9,8 +9,8 @@ public record ClienteDTO(
         String apellidos,
         String telefono,
         List<DireccionDTO> direcciones
-) {
 
+) {
 
     public ClienteDTO(String dni, String nombres, String apellidos, String telefono, List<DireccionDTO> direcciones) {
         this(null, dni, nombres, apellidos, telefono, direcciones);

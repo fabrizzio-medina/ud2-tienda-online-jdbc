@@ -6,8 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class HikariConnectionProvider implements  ConnectionProvider{
-
+public class HikariConnectionProvider implements ConnectionProvider{
     private static HikariDataSource dataSource;
 
     public HikariConnectionProvider(DatabaseSettings settings){

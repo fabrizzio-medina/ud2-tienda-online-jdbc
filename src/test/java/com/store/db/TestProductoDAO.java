@@ -1,56 +1,81 @@
 package com.store.db;
 
+
+import com.store.config.ConnectionMode;
+import com.store.config.DatabaseEngine;
 import com.store.dao.ProductoDAO;
 import com.store.dao.impl.ProductoDAOImpl;
-import com.store.dto.Pageable;
-import com.store.dto.Pagina;
-import com.store.dto.ProductoDTO;
-import com.store.service.ProductoService;
-import org.junit.jupiter.api.Test;
+import com.store.model.Producto;
+import com.store.model.TipoProducto;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
+import java.sql.*;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestProductoDAO {
 
+    private static ConnectionProvider provider;
+    private static Long plataformaId;
 
-    @Test
-    public void testCreateProducto(){
-        ProductoDAO productoDAO = new ProductoDAOImpl(ConnectionProviderFactory.getProvider());
+    private final ProductoDAO productoDAO = new ProductoDAOImpl();
+    private Connection conn;
 
-        ProductoDTO productoDTO = new ProductoDTO("10121212", "Computadora HP", "Computadora HP core i5", 10, BigDecimal.valueOf(2500));
+    @BeforeAll
+    static void prepararBaseDeDatos() throws SQLException {
+        provider = ConnectionProviderFactory.getProvider();
+        new SchemaInitializer(provider, DatabaseEngine.H2).initializeDatabase();
 
-        ProductoService productoService = new ProductoService(productoDAO);
-        ProductoDTO productoGuardado = productoService.guardar(productoDTO);
+        // Plataforma común para los productos de prueba
+        try (Connection c = provider.getConnection();
+             PreparedStatement ps = c.prepareStatement(
+                     "INSERT INTO plataforma(socket, fabricante) VALUES (?, ?)",
+                     Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, "AM5-TEST");
+            ps.setString(2, "AMD");
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                rs.next();
+                plataformaId = rs.getLong(1);
+            }
+        }
+    }
 
-        assertNotNull(productoGuardado, "El producto guardado no deberia ser nulo");
-        assertNotNull(productoGuardado.id(), "El ID debe generarse en la DB");
+    @BeforeEach
+    void abrirTransaccion() throws SQLException {
+        conn = provider.getConnection();
+        conn.setAutoCommit(false);
+    }
 
-        assertEquals(productoDTO.sku(), productoGuardado.sku());
-        assertEquals(productoDTO.nombre(), productoGuardado.nombre());
-        assertEquals(productoDTO.descripcion(), productoGuardado.descripcion());
-        assertEquals(productoDTO.cantidad(), productoGuardado.cantidad());
-        assertEquals(productoDTO.precioUnitario(), productoGuardado.precioUnitario());
-
-        System.out.println(productoGuardado);
+    @AfterEach
+    void deshacerTransaccion() throws SQLException {
+        conn.rollback();
+        conn.close();
     }
 
     @Test
-    public void testProductosPaginado(){
-        ProductoDAO productoDAO = new ProductoDAOImpl(ConnectionProviderFactory.getProvider());
-        ProductoService productoService = new ProductoService(productoDAO);
+    @DisplayName("buscarPorSKU encuentra el producto por su SKU")
+    void buscarPorSkuDevuelveProducto() {
+        Producto guardado = productoDAO.guardar(conn, nuevoProducto("TEST-PB-1", "Placa Test", TipoProducto.PLACA_BASE, "149.00"));
 
-        Pageable pageable = new Pageable(0, 10);
-        Pagina<ProductoDTO> paginaProductos = productoService.listarPaginado(pageable);
+        Optional<Producto> encontrado = productoDAO.buscarPorSKU(conn, "TEST-PB-1");
 
-        assertNotNull(paginaProductos, "La página no debería ser nula");
-        assertEquals(0, paginaProductos.getNumeroPagina(), "Debería ser la página 0");
-        assertEquals(10, paginaProductos.getTamanioPagina(), "El tamaño de página debería ser 10");
-
-        assertNotNull(paginaProductos.getContenido(), "El contenido no debe ser nulo");
-        assertTrue(paginaProductos.getContenido().size() <= 10, "No debe traer más elementos que el tamaño de página");
-
-        paginaProductos.getContenido().stream().forEach(System.out::println);
+        assertTrue(encontrado.isPresent());
+        assertEquals(guardado.getId(), encontrado.get().getId());
+        assertEquals(TipoProducto.PLACA_BASE, encontrado.get().getTipoProducto());
     }
+
+    @Test
+    @DisplayName("buscarPorSKU con un SKU inexistente devuelve Optional vacío")
+    void buscarPorSkuInexistente() {
+        assertTrue(productoDAO.buscarPorSKU(conn, "NO-EXISTE").isEmpty());
+    }
+
+    private Producto nuevoProducto(String sku, String nombre, TipoProducto tipo, String precio) {
+        return new Producto(sku, nombre, "Descripción de prueba", tipo, new BigDecimal(precio), plataformaId);
+    }
+
 }

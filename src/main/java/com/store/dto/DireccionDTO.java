@@ -7,5 +7,4 @@ public record DireccionDTO(
     public DireccionDTO(String descripcion) {
         this(null, descripcion);
     }
-
 }

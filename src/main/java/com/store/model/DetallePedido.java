@@ -3,19 +3,25 @@ package com.store.model;
 import java.math.BigDecimal;
 
 public class DetallePedido {
-
-    private long id;
-
+    private Long id;
     private int linea;
-    private long pedidoId;
-    private long productoId;
+    private Long pedidoId;
+    private Long productoId;
     private int cantidad;
     private BigDecimal precioUnitario;
 
     public DetallePedido() {
     }
 
-    public DetallePedido(long id, int linea, long pedidoId, long productoId, int cantidad, BigDecimal precioUnitario) {
+    public DetallePedido(int linea, Long pedidoId, Long productoId, int cantidad, BigDecimal precioUnitario) {
+        this.linea = linea;
+        this.pedidoId = pedidoId;
+        this.productoId = productoId;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
+    public DetallePedido(Long id, int linea, Long pedidoId, Long productoId, int cantidad, BigDecimal precioUnitario) {
         this.id = id;
         this.linea = linea;
         this.pedidoId = pedidoId;
@@ -24,11 +30,11 @@ public class DetallePedido {
         this.precioUnitario = precioUnitario;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,19 +46,19 @@ public class DetallePedido {
         this.linea = linea;
     }
 
-    public long getPedidoId() {
+    public Long getPedidoId() {
         return pedidoId;
     }
 
-    public void setPedidoId(long pedidoId) {
+    public void setPedidoId(Long pedidoId) {
         this.pedidoId = pedidoId;
     }
 
-    public long getProductoId() {
+    public Long getProductoId() {
         return productoId;
     }
 
-    public void setProductoId(long productoId) {
+    public void setProductoId(Long productoId) {
         this.productoId = productoId;
     }
 
@@ -72,4 +78,3 @@ public class DetallePedido {
         this.precioUnitario = precioUnitario;
     }
 }
-

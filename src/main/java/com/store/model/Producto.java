@@ -7,21 +7,30 @@ public class Producto {
     private String sku;
     private String nombre;
     private String descripcion;
-    private int cantidad;
+    private TipoProducto tipoProducto;
     private BigDecimal precioUnitario;
+    private Long plataformaId; // null si el tipo no depende de socket
+    private boolean activo = true;
 
     public Producto() {
     }
 
-    public Producto(Long id, String sku, String nombre, String descripcion, int cantidad, BigDecimal precioUnitario) {
+    public Producto(String sku, String nombre, String descripcion, TipoProducto tipoProducto,
+                    BigDecimal precioUnitario, Long plataformaId) {
+        this(null, sku, nombre, descripcion, tipoProducto, precioUnitario, plataformaId, true);
+    }
+
+    public Producto(Long id, String sku, String nombre, String descripcion, TipoProducto tipoProducto,
+                    BigDecimal precioUnitario, Long plataformaId, boolean activo) {
         this.id = id;
         this.sku = sku;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.cantidad = cantidad;
+        this.tipoProducto = tipoProducto;
         this.precioUnitario = precioUnitario;
+        this.plataformaId = plataformaId;
+        this.activo = activo;
     }
-
 
     public Long getId() {
         return id;
@@ -55,12 +64,12 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public int getCantidad() {
-        return cantidad;
+    public TipoProducto getTipoProducto() {
+        return tipoProducto;
     }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+    public void setTipoProducto(TipoProducto tipoProducto) {
+        this.tipoProducto = tipoProducto;
     }
 
     public BigDecimal getPrecioUnitario() {
@@ -71,4 +80,19 @@ public class Producto {
         this.precioUnitario = precioUnitario;
     }
 
+    public Long getPlataformaId() {
+        return plataformaId;
+    }
+
+    public void setPlataformaId(Long plataformaId) {
+        this.plataformaId = plataformaId;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 }

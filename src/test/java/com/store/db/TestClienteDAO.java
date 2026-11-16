@@ -19,14 +19,15 @@ public class TestClienteDAO {
 
     @Test
     public void testCreateCliente(){
-        ClienteDAO clienteDAO = new ClienteDAOImpl(ConnectionProviderFactory.getProvider());
-        DireccionDAO direccionDAO = new DireccionDAOImpl(ConnectionProviderFactory.getProvider());
+        ConnectionProvider provider = ConnectionProviderFactory.getProvider();
+        ClienteDAO clienteDAO = new ClienteDAOImpl();
+        DireccionDAO direccionDAO = new DireccionDAOImpl();
 
         List<DireccionDTO> direcciones = new ArrayList<>();
         direcciones.add(new DireccionDTO("Calle las golondrinas 1547"));
 
-        ClienteDTO clienteDTO = new ClienteDTO("987654321", "Luisa", "lane Cruz", "45454545", direcciones);
-        ClienteService clienteService = new ClienteService(clienteDAO, direccionDAO);
+        ClienteDTO clienteDTO = new ClienteDTO("987654327", "Luisa", "lane Cruz", "45454545", direcciones);
+        ClienteService clienteService = new ClienteService(provider, clienteDAO, direccionDAO);
         ClienteDTO clienteGuardado = clienteService.guardar(clienteDTO);
 
         assertNotNull(clienteGuardado, "El cliente guardado no deberia ser nulo");
